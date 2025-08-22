@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ShipWheelIcon } from "lucide-react";
 import { Link } from "react-router";
 import useLogin from "../hooks/useLogin";
-import authentication from "../assets/authentication.png"; 
+import authentication from "../assets/authentication.png"; // Adjust the import path as necessary
 
 const LoginPage = () => {
   const [loginData, setLoginData] = useState({
@@ -48,7 +48,7 @@ const LoginPage = () => {
           {/* ERROR MESSAGE DISPLAY */}
           {error && (
             <div className="alert alert-error mb-4">
-              <span>{error.message}</span>
+              <span>{error.response.data.message}</span>
             </div>
           )}
 
@@ -91,7 +91,7 @@ const LoginPage = () => {
                     />
                   </div>
 
-                  <button  type="submit" className="btn btn-primary w-full" disabled={isPending}>
+                  <button type="submit" className="btn btn-primary w-full" disabled={isPending}>
                     {isPending ? (
                       <>
                         <span className="loading loading-spinner loading-xs"></span>
@@ -121,7 +121,7 @@ const LoginPage = () => {
           <div className="max-w-md p-8">
             {/* Illustration */}
             <div className="relative aspect-square max-w-sm mx-auto">
-              <img src={authentication} alt="Language connection illustration" className="w-full h-full" />
+              <img src= {authentication} alt="Language connection illustration" className="w-full h-full" />
             </div>
 
             <div className="text-center space-y-3 mt-6">
