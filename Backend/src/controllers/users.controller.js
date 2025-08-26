@@ -1,24 +1,22 @@
 import FriendRequest from "../models/FriendRequest.js";
 import User from "../models/User.js";
 
-export async function getReccomandedUsers(req, res) {
+export async function getRecommendedUsers(req, res) {
   try {
     const currentUserId = req.user.id;
     const currentUser = req.user;
 
     const recommendedUsers = await User.find({
       $and: [
-        { _id: { $ne: currentUserId } },
-        { $id: { $nin: currentUser } },
-        { $isOnboard: true },
+        { _id: { $ne: currentUserId } }, //exclude current user
+        { _id: { $nin: currentUser.friends } }, // exclude current user's friends
+        { isOnboarded: true },
       ],
     });
-
     res.status(200).json(recommendedUsers);
   } catch (error) {
-    console.log("Error in get Recommanded Controller", error);
-
-    res.status(500).json("Internal Server Error");
+    console.error("Error in getRecommendedUsers controller", error.message);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 }
 
@@ -26,15 +24,12 @@ export async function getMyFriends(req, res) {
   try {
     const user = await User.findById(req.user.id)
       .select("friends")
-      .populate(
-        "friends",
-        "fullName profilePic nativeLanguage, learningLanguage"
-      );
+      .populate("friends", "fullName profilePic nativeLanguage learningLanguage");
 
     res.status(200).json(user.friends);
   } catch (error) {
-    console.log("Error in get My Friends Controller", error);
-    res.status(500).json({ mesage: "Internal Server Error" });
+    console.error("Error in getMyFriends controller", error.message);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 }
 
@@ -42,6 +37,8 @@ export async function sendFriendRequest(req, res) {
   try {
     const myId = req.user.id;
     const { id: recipientId } = req.params;
+    console.log("Recipient ID:", recipientId); 
+
 
     // prevent sending req to yourself
     if (myId === recipientId) {
@@ -122,8 +119,7 @@ export async function acceptFriendRequest(req,res) {
 }
 
 
-export async function getFriendRequest(req, res) {
-
+export async function getFriendRequests(req, res) {
   try {
     const incomingReqs = await FriendRequest.find({
       recipient: req.user.id,
