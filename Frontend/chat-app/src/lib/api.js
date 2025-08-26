@@ -79,3 +79,67 @@ export const completeOnboarding = async (userData) => {
   return response.data; 
 
 }
+
+export async function getUserFriends() {
+  const response = await axiosInstance.get("/users/friends");
+  console.log("Friends Response:", response.data);
+  return response.data;
+}
+
+export async function getRecommendedUsers() {
+  const response = await axiosInstance.get("/users");
+  console.log("Recommended Users Response:", response.data);
+  return response.data;
+}
+
+export async function getOutgoingFriendReqs() {
+  const response = await axiosInstance.get("/users/outgoing-friend-requests");
+  return response.data;
+}
+
+export async function sendFriendRequest(userId) {
+
+  try{
+  const response = await axiosInstance.post(`/users/friend-requests/${userId}`);
+  console.log("Send Friend Request Response:", response.data);
+  
+  return response.data;
+  } catch(error){
+    if (error.response) {
+      console.error("Error details:", error.response.data);
+      throw new Error(error.response.data.message || "Sending Friend Request failed"); // Rethrow with a message
+    } else {
+      console.error("Error:", error.message);
+      throw new Error("Network error during Sending Friend Request"); // Rethrow with a message
+    }
+  }
+}
+
+export async function getFriendRequests() {
+  try {
+    const response = await axiosInstance.get("/users/friend-requests");
+    console.log("Get Friend Requests Response:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching friend requests:", error.message);
+    throw error; // Re-throw the error for further handling if needed
+  }
+}
+
+
+export async function acceptFriendRequest(requestId) {
+  const response = await axiosInstance.put(`/users/friend-requests/${requestId}/accept`);
+  return response.data;
+}
+
+export async function getStreamToken() {
+  try {
+  const response = await axiosInstance.get("/chat/token");
+  console.log("Stream Token Response:", response.data);
+  return response.data;
+}
+catch (error) {
+  console.error("Error fetching stream token:", error.message);
+  throw error; // Re-throw the error for further handling if needed
+}
+}
