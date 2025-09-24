@@ -1,0 +1,34 @@
+version: '3.8'  # Specify the version
+
+services:
+  frontend:
+    build: ./Frontend/chat-app
+    ports:
+      - "5173:5173"
+    networks:
+      - mern
+
+  backend:
+    build: ./Backend
+    ports:
+      - "3000:3000"
+    networks:
+      - mern
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - mern
+
+networks:
+  mern:
+    driver: bridge
+
+volumes:
+  mongo-data:

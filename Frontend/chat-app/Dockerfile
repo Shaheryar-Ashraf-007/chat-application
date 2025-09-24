@@ -1,13 +1,17 @@
 FROM node:20 
 
-WORKDIR /app
+ WORKDIR /app
 
-COPY package.json .
+ COPY package.json .
 
-RUN npm install
+ RUN npm install
 
-COPY . .
+ COPY . .
 
-EXPOSE 5173
+ EXPOSE 5173
 
-CMD ["npm", "run", "dev"]
+ CMD ["npm", "run", "dev"]
+
+
+
+#  docker run --name mongo --network mern -d -p 27017:27017 -v ~/opt/data:/data/db mongo:latest
